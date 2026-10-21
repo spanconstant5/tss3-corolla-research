@@ -7,11 +7,8 @@
 - **Car**: 2025 Toyota Corolla Hybrid (12th gen, E210 facelift)
 - **EPS MCU**: Renesas RH850/P1M-E, part R7F701383, V850E2M instruction set
 - **EPS Application SW ID (F181)**: `8965F1208000` / `8A3111213000`
-- **EPS Serial**: `8965012N50E12H030731`
 - **EPS CodeFlash SHA256**: `fdb35b76891cf84a8b89e0a05c9c7c5cfcd27994cf85ccc01ff32828f53091f6`
-- **Comma device**: `comma-87c2d214`, Comma 4
-- **Panda serial (user's)**: `31001e001651343435333330`
-- **TSK panda serial (Kai's, used for firmware dumps)**: `23257862c6bf2f83`
+- **Hardware**: Comma 4 with panda
 
 ## What This Project Is
 
@@ -35,7 +32,7 @@ Key finding: **ECUs return zero UDS responses on the "tapped" buses** during nor
 
 ### Phase 2: EPS Firmware Acquisition (Aug 2026)
 
-Using Kai's TSK (Toyota Service Kit) tooling on the comma device with Kai's panda (`23257862c6bf2f83`), full firmware dumps were acquired from the user's EPS:
+Using Kai's TSK (Toyota Service Kit) tooling on the comma device with a dedicated diagnostic panda, full firmware dumps were acquired from the user's EPS:
 
 **Preflight probe results (2026-08-21)**:
 - Bus sweep: Bus 0 → MessageTimeoutError. **Bus 1 → opened** (both param 0 and param 1). Bus 2 → MessageTimeoutError.
@@ -132,7 +129,7 @@ Payload and metadata deployed to comma device at `/data/tss3-oracle/bundle/`. Th
 **Why it worked before but doesn't now**:
 
 The TSK firmware dump (Phase 2) successfully used the **same** bus 1, param 1, addresses 0x7A1/0x7A9 — but with:
-- **Different panda**: TSK panda `23257862c6bf2f83` vs user's `31001e001651343435333330`
+- **Different panda**: The TSK session used a dedicated diagnostic panda, not the user's daily-driver panda
 - **Different harness status**: TSK session had `harness_status: 2` (flipped); user's current harness status is unknown but may be `harness_status: 1` (normal)
 - **Different safety mode context**: TSK runs its own diagnostic safety configuration; the signer installer uses `ELM327_SAFETY_MODE=3` with param 1
 
